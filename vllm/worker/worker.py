@@ -80,10 +80,7 @@ class Worker(WorkerBase):
             is_driver_worker=is_driver_worker,
             vision_language_config=vision_language_config,
         )
-        # Uninitialized cache engine. Will be initialized by
-        # self.init_cache_engine().
-        self.cache_config = None
-        self.preoccupied_mem = None
+
         # initialize_cache.
         self.cache_engine: CacheEngine
         self.gpu_cache: List[torch.Tensor]

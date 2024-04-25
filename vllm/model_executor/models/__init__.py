@@ -55,6 +55,7 @@ _MODELS = {
     "StableLmForCausalLM": ("stablelm", "StablelmForCausalLM"),
     "Starcoder2ForCausalLM": ("starcoder2", "Starcoder2ForCausalLM"),
     "HongshuLMHeadModel": ("hongshu", "HongshuLMHeadModel"),
+    "Hongshu2ForCausalLM": ("hongshu2", "Hongshu2ForCausalLM"),
     "XverseForCausalLM": ("xverse", "XverseForCausalLM"),
 }
 

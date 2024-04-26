@@ -238,7 +238,8 @@ void bgmv_kernel(out_T *__restrict__ Y, const in_T *__restrict__ X,
   } else {
     static_assert(feat_in % (vec_size * 32) == 0 ||
                   feat_in % (vec_size * 16) == 0 ||
-                  feat_in % (vec_size * 8) == 0);
+                  feat_in % (vec_size * 8) == 0 ||
+                  feat_in % (vec_size * 4) == 0);
 
     if constexpr (feat_in % (vec_size * 32) == 0) {
       constexpr int tx = 32;
@@ -267,6 +268,19 @@ void bgmv_kernel(out_T *__restrict__ Y, const in_T *__restrict__ X,
                                         scale);
     } else if constexpr (feat_in % (vec_size / 2 * 16) == 0) {
       constexpr int tx = 16;
+      constexpr int ty = 4;
+
+      dim3 nblks(feat_out, batch_size);
+      dim3 nthrs(tx, ty);
+
+      bgmv_shrink_kernel<feat_in, feat_out, vec_size / 2,
+                         vec_size * sizeof(in_T) / 2,
+                         vec_size * sizeof(W_T) / 2, tx, ty, tz>
+          <<<nblks, nthrs, 0, stream>>>(Y, X, W, indicies, y_offset,
+                                        full_y_size, num_layers, layer_idx,
+                                        scale);
+    } else if constexpr (feat_in % (vec_size / 2 * 8) == 0) {
+      constexpr int tx = 8;
       constexpr int ty = 4;
 
       dim3 nblks(feat_out, batch_size);
